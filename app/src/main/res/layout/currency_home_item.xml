@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/tranparent"
+    android:background="@color/transparent"
     android:layout_marginTop="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <androidx.cardview.widget.CardView

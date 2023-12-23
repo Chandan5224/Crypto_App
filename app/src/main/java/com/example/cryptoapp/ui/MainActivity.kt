@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // off screen oration
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         // Stop night mode and follow the system setting
@@ -67,23 +70,20 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.refreshTime.observe(this, Observer { response ->
-            when (response) {
-                is Resource.Loading -> {
-                }
-                is Resource.Success -> {
-                    binding.tvRefreshTime.text = response.data
-                }
-                is Resource.Error -> {
-                }
-            }
+            binding.tvRefreshTime.text = response
         })
 
+
+        binding.btnSeeAll.setOnClickListener {
+            val bottomSheetDialog = CryptoBottomSheetFragment()
+            bottomSheetDialog.show(supportFragmentManager, "Test")
+        }
     }
 
     private fun setupSwipeRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.rvCrypto.visibility = View.GONE
-            viewModel.reFetchData()
+            viewModel.fetchData()
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
