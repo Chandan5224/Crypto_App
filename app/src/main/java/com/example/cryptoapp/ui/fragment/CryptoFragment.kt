@@ -1,63 +1,55 @@
-package com.example.cryptoapp.ui
+package com.example.cryptoapp.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cryptoapp.R
-import com.example.cryptoapp.adapter.CryptoAdapter
 import com.example.cryptoapp.adapter.CryptoSearchAdapter
-import com.example.cryptoapp.databinding.FragmentCryptoBottomSheetBinding
+import com.example.cryptoapp.databinding.FragmentCryptoBinding
 import com.example.cryptoapp.model.CryptoData
+import com.example.cryptoapp.ui.CryptoViewModel
+import com.example.cryptoapp.ui.MainActivity
 import com.example.cryptoapp.util.Resource
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
 
-    private lateinit var binding: FragmentCryptoBottomSheetBinding
+class CryptoFragment : Fragment() {
+
+    lateinit var binding: FragmentCryptoBinding
     lateinit var viewModel: CryptoViewModel
     lateinit var cryptoSearchAdapter: CryptoSearchAdapter
     private val filterCrypto = mutableListOf<CryptoData>()
     private var originalCrypto = mutableListOf<CryptoData>()
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentCryptoBottomSheetBinding.inflate(layoutInflater)
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        // setup recyclerview
+        binding = FragmentCryptoBinding.inflate(layoutInflater, container, false)
+// setup recyclerview
         setupRecyclerView()
 
         /// searchView handle
         setupSearchView()
 
         viewModel = (activity as MainActivity).viewModel
-        binding.btnMenuBack.setOnClickListener {
-            dismiss()
-        }
 
         viewModel.cryptoData.observe(this, Observer { response ->
             when (response) {
                 is Resource.Loading -> {
+                    binding.loaderLottie.visibility = View.VISIBLE
                     binding.rvCryptoSearch.visibility = View.GONE
                 }
                 is Resource.Success -> {
+
+                    binding.loaderLottie.visibility = View.GONE
                     binding.rvCryptoSearch.visibility = View.VISIBLE
                     response.data.let { data ->
                         originalCrypto = data as MutableList<CryptoData>
@@ -67,11 +59,17 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 }
                 is Resource.Error -> {
+                    binding.loaderLottie.visibility = View.VISIBLE
                     binding.rvCryptoSearch.visibility = View.VISIBLE
 //                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
                 }
             }
         })
+
+        binding.btnMenuBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         return binding.root
     }
 
@@ -112,5 +110,6 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
         }
         cryptoSearchAdapter.notifyDataSetChanged()
     }
+
 
 }
