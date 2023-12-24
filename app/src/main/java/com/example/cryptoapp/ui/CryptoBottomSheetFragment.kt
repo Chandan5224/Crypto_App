@@ -56,9 +56,11 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
             when (response) {
                 is Resource.Loading -> {
                     binding.rvCryptoSearch.visibility = View.GONE
+                    binding.loaderLottie.visibility = View.VISIBLE
                 }
                 is Resource.Success -> {
                     binding.rvCryptoSearch.visibility = View.VISIBLE
+                    binding.loaderLottie.visibility = View.GONE
                     response.data.let { data ->
                         originalCrypto = data as MutableList<CryptoData>
                         filterCrypto.clear()
@@ -68,7 +70,7 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 is Resource.Error -> {
                     binding.rvCryptoSearch.visibility = View.VISIBLE
-//                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    binding.loaderLottie.visibility = View.GONE
                 }
             }
         })
