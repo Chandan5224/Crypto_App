@@ -15,7 +15,6 @@ import com.example.cryptoapp.adapter.CryptoAdapter
 import com.example.cryptoapp.databinding.FragmentHomeBinding
 import com.example.cryptoapp.ui.CryptoViewModel
 import com.example.cryptoapp.ui.MainActivity
-import com.example.cryptoapp.util.NetworkConnection
 import com.example.cryptoapp.util.Resource
 
 class HomeFragment : Fragment() {
@@ -23,7 +22,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     lateinit var cryptoAdapter: CryptoAdapter
     lateinit var viewModel: CryptoViewModel
-    private lateinit var networkConnection: NetworkConnection
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +30,6 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         viewModel = (activity as MainActivity).viewModel
-        networkConnection = NetworkConnection(binding.root.context)
 
 
         // setup recyclerview
@@ -83,19 +80,6 @@ class HomeFragment : Fragment() {
             binding.tvRefreshTime.text = response
         })
 
-        // network
-    }
-
-    override fun onStart() {
-        super.onStart()
-        networkConnection.observe(this) {
-            if (it) {
-                Toast.makeText(binding.root.context, "Online", Toast.LENGTH_SHORT).show()
-                viewModel.fetchData()
-            } else {
-                Toast.makeText(binding.root.context, "Offline", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun setupSwipeRefreshLayout() {

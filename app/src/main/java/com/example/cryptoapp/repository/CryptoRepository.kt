@@ -1,11 +1,7 @@
 package com.example.cryptoapp.repository
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import com.example.cryptoapp.api.CryptoRateApi
 import com.example.cryptoapp.model.ApiResponse
-import com.example.cryptoapp.model.Crypto
 import com.example.cryptoapp.model.CryptoData
 import com.example.cryptoapp.model.CryptoRateResponse
 import com.example.cryptoapp.util.Resource
@@ -35,7 +31,7 @@ class CryptoRepository @Inject constructor(private val cryptoRateApi: CryptoRate
         rateResponse: Response<CryptoRateResponse>
     ): Resource<List<CryptoData>> {
         val combinedData = mutableListOf<CryptoData>()
-        var cryptoDataResponse = mutableMapOf<String, Crypto>()
+        var cryptoDataResponse = mutableMapOf<String, CryptoData>()
 
         if (nameImageUrlResponse.isSuccessful && rateResponse.isSuccessful) {
             nameImageUrlResponse.body()?.let { resultResponse ->
@@ -47,9 +43,9 @@ class CryptoRepository @Inject constructor(private val cryptoRateApi: CryptoRate
                 if (resultResponse.success) {
                     for ((key, value) in resultResponse.rates) {
                         val cryptoData = CryptoData(
-                            cryptoDataResponse[key]!!.name_full,
-                            cryptoDataResponse[key]!!.icon_url,
-                            String.format("%.6f", value).toDouble()
+                            name_full = cryptoDataResponse[key]!!.name_full,
+                            icon_url =  cryptoDataResponse[key]!!.icon_url,
+                            rate = String.format("%.6f", value).toDouble()
                         )
                         combinedData.add(cryptoData)
                     }
