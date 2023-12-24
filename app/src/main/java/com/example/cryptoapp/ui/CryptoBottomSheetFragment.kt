@@ -31,6 +31,7 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentCryptoBottomSheetBinding.inflate(layoutInflater)
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
@@ -39,8 +40,6 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         // setup recyclerview
         setupRecyclerView()
 
@@ -50,6 +49,7 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = (activity as MainActivity).viewModel
         binding.btnMenuBack.setOnClickListener {
             dismiss()
+
         }
 
         viewModel.cryptoData.observe(this, Observer { response ->
@@ -69,8 +69,8 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 }
                 is Resource.Error -> {
-                    binding.rvCryptoSearch.visibility = View.VISIBLE
-                    binding.loaderLottie.visibility = View.GONE
+                    binding.rvCryptoSearch.visibility = View.GONE
+                    binding.loaderLottie.visibility = View.VISIBLE
                 }
             }
         })

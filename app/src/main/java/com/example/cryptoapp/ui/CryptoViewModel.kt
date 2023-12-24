@@ -1,10 +1,9 @@
 package com.example.cryptoapp.ui
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.cryptoapp.model.Crypto
 import com.example.cryptoapp.model.CryptoData
 import com.example.cryptoapp.repository.CryptoRepository
@@ -12,8 +11,11 @@ import com.example.cryptoapp.util.Resource
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class CryptoViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
+class CryptoViewModel @Inject constructor(
+    private val cryptoRepository: CryptoRepository
+) : ViewModel() {
 
     private val _cryptoData: MutableLiveData<Resource<List<CryptoData>>> = MutableLiveData()
     private val _refreshTime: MutableLiveData<String> = MutableLiveData()
@@ -30,10 +32,10 @@ class CryptoViewModel(private val cryptoRepository: CryptoRepository) : ViewMode
     }
 
     fun fetchData() {
-        _refreshTime.postValue(getCurrentTime())
         _cryptoData.postValue(Resource.Loading())
         viewModelScope.launch {
-            _cryptoData.postValue(Resource.Success(cryptoRepository.getCombinedCryptoData()))
+            _cryptoData.postValue(cryptoRepository.getCombinedCryptoData())
+            _refreshTime.postValue(getCurrentTime())
         }
     }
 
@@ -53,4 +55,5 @@ class CryptoViewModel(private val cryptoRepository: CryptoRepository) : ViewMode
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         return timeFormat.format(currentTime)
     }
+
 }

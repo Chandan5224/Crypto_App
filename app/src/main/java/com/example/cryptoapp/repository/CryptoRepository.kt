@@ -1,34 +1,46 @@
 package com.example.cryptoapp.repository
 
-import com.example.cryptoapp.api.RetrofitInstance
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import com.example.cryptoapp.api.CryptoRateApi
 import com.example.cryptoapp.model.ApiResponse
 import com.example.cryptoapp.model.Crypto
 import com.example.cryptoapp.model.CryptoData
 import com.example.cryptoapp.model.CryptoRateResponse
+import com.example.cryptoapp.util.Resource
 import retrofit2.Response
+import java.net.UnknownHostException
+import javax.inject.Inject
 
-class CryptoRepository {
+class CryptoRepository @Inject constructor(private val cryptoRateApi: CryptoRateApi) {
 
-    suspend fun getCryptoRates() = RetrofitInstance.api.getCryptoRates()
+    private suspend fun getCryptoRates() = cryptoRateApi.getCryptoRates()
 
-    suspend fun getCryptoData() = RetrofitInstance.api.getCryptoData()
-    suspend fun getCombinedCryptoData(): List<CryptoData> {
-        val nameImageUrlResponse = getCryptoData()
-        val rateResponse = getCryptoRates()
-        return combineData(nameImageUrlResponse, rateResponse)
+    private suspend fun getCryptoData() = cryptoRateApi.getCryptoData()
+    suspend fun getCombinedCryptoData(): Resource<List<CryptoData>> {
+        return try {
+            val nameImageUrlResponse = getCryptoData()
+            val rateResponse = getCryptoRates()
+            combineData(nameImageUrlResponse, rateResponse)
+        } catch (e: UnknownHostException) {
+            Resource.Error("UnknownHostException")
+        } catch (e: Exception) {
+            Resource.Error("Data can't fetch some errors occur")
+        }
     }
 
     private fun combineData(
         nameImageUrlResponse: Response<ApiResponse>,
         rateResponse: Response<CryptoRateResponse>
-    ): List<CryptoData> {
+    ): Resource<List<CryptoData>> {
         val combinedData = mutableListOf<CryptoData>()
         var cryptoDataResponse = mutableMapOf<String, Crypto>()
 
         if (nameImageUrlResponse.isSuccessful && rateResponse.isSuccessful) {
             nameImageUrlResponse.body()?.let { resultResponse ->
                 if (resultResponse.success) {
-                    cryptoDataResponse=resultResponse.crypto.toMutableMap()
+                    cryptoDataResponse = resultResponse.crypto.toMutableMap()
                 }
             }
             rateResponse.body()?.let { resultResponse ->
@@ -43,7 +55,8 @@ class CryptoRepository {
                     }
                 }
             }
+            return Resource.Success(combinedData)
         }
-        return combinedData
+        return Resource.Error("Data can't fetch some errors occur")
     }
 }

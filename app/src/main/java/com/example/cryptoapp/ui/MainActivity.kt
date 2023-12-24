@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,14 +14,18 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.example.cryptoapp.R
 import com.example.cryptoapp.adapter.CryptoAdapter
 import com.example.cryptoapp.databinding.ActivityMainBinding
-import com.example.cryptoapp.repository.CryptoRepository
+import com.example.cryptoapp.util.CryptoApplication
 import com.example.cryptoapp.util.Resource
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: CryptoViewModel
+
+    @Inject
+    lateinit var cryptoViewModelProviderFactory: CryptoViewModelProviderFactory
     lateinit var cryptoAdapter: CryptoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +39,12 @@ class MainActivity : AppCompatActivity() {
         // Stop night mode and follow the system setting
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_UNSPECIFIED)
 
+        /// setup viewModel
+        (application as CryptoApplication).applicationComponent.inject(this)
+        viewModel =
+            ViewModelProvider(this, cryptoViewModelProviderFactory)[CryptoViewModel::class.java]
+
+
         // setup recyclerview
         setupRecyclerView()
         /// Setup image Slider
@@ -43,11 +52,17 @@ class MainActivity : AppCompatActivity() {
         // setup SwipeRefreshLayout
         setupSwipeRefreshLayout()
 
-        /// setup viewModel
-        val newsRepository = CryptoRepository()
-        val viewModelProviderFactory = CryptoViewModelProviderFactory(newsRepository)
-        viewModel = ViewModelProvider(this, viewModelProviderFactory)[CryptoViewModel::class.java]
+        //Observe Data
+        observeData()
 
+        binding.btnSeeAll.setOnClickListener {
+            val bottomSheetDialog = CryptoBottomSheetFragment()
+            bottomSheetDialog.show(supportFragmentManager, "Test")
+        }
+    }
+
+
+    private fun observeData() {
         viewModel.cryptoData.observe(this, Observer { response ->
             when (response) {
                 is Resource.Loading -> {
@@ -62,8 +77,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 is Resource.Error -> {
-                    binding.loaderLottie.visibility = View.GONE
-                    binding.rvCrypto.visibility = View.VISIBLE
+                    binding.loaderLottie.visibility = View.VISIBLE
+                    binding.rvCrypto.visibility = View.GONE
                     Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -72,12 +87,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.refreshTime.observe(this, Observer { response ->
             binding.tvRefreshTime.text = response
         })
-
-
-        binding.btnSeeAll.setOnClickListener {
-            val bottomSheetDialog = CryptoBottomSheetFragment()
-            bottomSheetDialog.show(supportFragmentManager, "Test")
-        }
     }
 
     private fun setupSwipeRefreshLayout() {
