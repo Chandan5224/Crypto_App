@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,6 +76,25 @@ class CryptoFragment : Fragment() {
     }
 
     private fun setupSearchView() {
+        // Access the EditText inside the SearchView
+        val searchEditText =
+            binding.root.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+
+        // Set the text color
+        searchEditText.setTextColor(
+            ContextCompat.getColor(
+                binding.root.context,
+                android.R.color.black
+            )
+        )
+
+        // Set the hint color
+        searchEditText.setHintTextColor(
+            ContextCompat.getColor(
+                binding.root.context,
+                android.R.color.black
+            )
+        )
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
