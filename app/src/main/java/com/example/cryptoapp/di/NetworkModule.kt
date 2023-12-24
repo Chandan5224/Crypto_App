@@ -1,10 +1,11 @@
 package com.example.cryptoapp.di
 
-import android.app.Application
 import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import com.example.cryptoapp.api.CryptoRateApi
 import com.example.cryptoapp.util.Constants
 import com.example.cryptoapp.util.Constants.Companion.BASE_URL
+import com.example.cryptoapp.util.CryptoApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,9 +38,4 @@ class NetworkModule {
         return retrofit.create(CryptoRateApi::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun provideApplicationContext(@ApplicationContext context: Context): Context {
-        return context
-    }
 }

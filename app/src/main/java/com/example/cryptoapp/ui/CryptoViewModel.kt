@@ -7,7 +7,9 @@ import androidx.lifecycle.*
 import com.example.cryptoapp.model.Crypto
 import com.example.cryptoapp.model.CryptoData
 import com.example.cryptoapp.repository.CryptoRepository
+import com.example.cryptoapp.util.NetworkConnection
 import com.example.cryptoapp.util.Resource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,7 +30,7 @@ class CryptoViewModel @Inject constructor(
 
     init {
         scheduleDataRefresh()
-        fetchData()
+//        fetchData()
     }
 
     fun fetchData() {
@@ -40,7 +42,7 @@ class CryptoViewModel @Inject constructor(
     }
 
 
-    private fun scheduleDataRefresh() {
+    fun scheduleDataRefresh() {
         refreshRunnable = object : Runnable {
             override fun run() {
                 fetchData()

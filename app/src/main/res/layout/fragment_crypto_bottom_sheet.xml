@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/home_background"
     android:orientation="vertical"
-    tools:context=".ui.CryptoBottomSheetFragment">
+    tools:context=".ui.fragment.CryptoBottomSheetFragment">
 
     <ImageButton
         android:id="@+id/btnMenuBack"

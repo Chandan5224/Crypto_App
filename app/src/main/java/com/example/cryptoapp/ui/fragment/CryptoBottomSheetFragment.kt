@@ -1,21 +1,19 @@
-package com.example.cryptoapp.ui
+package com.example.cryptoapp.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.cryptoapp.R
-import com.example.cryptoapp.adapter.CryptoAdapter
 import com.example.cryptoapp.adapter.CryptoSearchAdapter
 import com.example.cryptoapp.databinding.FragmentCryptoBottomSheetBinding
 import com.example.cryptoapp.model.CryptoData
+import com.example.cryptoapp.ui.CryptoViewModel
+import com.example.cryptoapp.ui.MainActivity
 import com.example.cryptoapp.util.Resource
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -47,6 +45,7 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
         setupSearchView()
 
         viewModel = (activity as MainActivity).viewModel
+
         binding.btnMenuBack.setOnClickListener {
             dismiss()
 
@@ -74,6 +73,7 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         })
+
         return binding.root
     }
 
