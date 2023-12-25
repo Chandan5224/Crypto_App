@@ -38,7 +38,6 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         viewModel = (activity as MainActivity).viewModel
 
-
         /// countDown setup
         binding.countDown.start(1000 * 60 * 3)
         binding.countDown.setOnCountdownEndListener {
