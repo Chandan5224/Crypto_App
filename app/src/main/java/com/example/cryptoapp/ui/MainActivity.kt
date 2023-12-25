@@ -43,10 +43,6 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(this, cryptoViewModelProviderFactory)[CryptoViewModel::class.java]
 
 
-
     }
-
-
-
 
 }

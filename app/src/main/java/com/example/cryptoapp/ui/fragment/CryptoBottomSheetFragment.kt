@@ -48,7 +48,6 @@ class CryptoBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.btnMenuBack.setOnClickListener {
             dismiss()
-
         }
 
         viewModel.cryptoData.observe(this, Observer { response ->

@@ -1,11 +1,14 @@
 package com.example.cryptoapp.ui.fragment
 
+import android.content.SharedPreferences
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.denzcoskun.imageslider.constants.ScaleTypes
@@ -15,22 +18,32 @@ import com.example.cryptoapp.adapter.CryptoAdapter
 import com.example.cryptoapp.databinding.FragmentHomeBinding
 import com.example.cryptoapp.ui.CryptoViewModel
 import com.example.cryptoapp.ui.MainActivity
+import com.example.cryptoapp.util.CryptoApplication
 import com.example.cryptoapp.util.Resource
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     lateinit var cryptoAdapter: CryptoAdapter
-    lateinit var viewModel: CryptoViewModel
+    private lateinit var viewModel: CryptoViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         viewModel = (activity as MainActivity).viewModel
 
+
+        /// countDown setup
+        binding.countDown.start(1000 * 60 * 3)
+        binding.countDown.setOnCountdownEndListener {
+            binding.countDown.start(1000 * 60 * 3)
+        }
 
         // setup recyclerview
         setupRecyclerView()
@@ -42,8 +55,13 @@ class HomeFragment : Fragment() {
         //Observe Data
         observeData()
 
+        // click handle
         binding.btnSeeAll.setOnClickListener {
             val bottomSheetDialog = CryptoBottomSheetFragment()
+            bottomSheetDialog.show(parentFragmentManager, "Test")
+        }
+        binding.btnNotification.setOnClickListener {
+            val bottomSheetDialog = NotificationBottomSheetFragment()
             bottomSheetDialog.show(parentFragmentManager, "Test")
         }
 
@@ -51,6 +69,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeData() {
+        /// login observe
+        viewModel.checkLogin.observe(this, Observer {
+            if (it) {
+                binding.tvUserName.text = "Hello \n" + viewModel.loadUsername()
+                binding.imgUser.setImageBitmap(viewModel.loadImage())
+            } else {
+                val bottomSheetDialog = UserOnboardingFragment()
+                bottomSheetDialog.show(parentFragmentManager, "Test")
+            }
+        })
 
         //// cryptoData
         viewModel.cryptoData.observe(this, Observer { response ->
@@ -106,5 +134,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(binding.root.context)
         }
     }
+
+
 
 }

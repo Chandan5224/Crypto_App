@@ -1,14 +1,13 @@
 package com.example.cryptoapp.di
 
-import android.content.Context
-import androidx.lifecycle.LifecycleOwner
+import android.app.Application
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.example.cryptoapp.api.CryptoRateApi
 import com.example.cryptoapp.util.Constants
-import com.example.cryptoapp.util.Constants.Companion.BASE_URL
-import com.example.cryptoapp.util.CryptoApplication
+import com.example.cryptoapp.util.FileHelper
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,8 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
-
+class AppModule(private val application: Application) {
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
@@ -26,7 +24,7 @@ class NetworkModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-        return Retrofit.Builder().baseUrl(BASE_URL)
+        return Retrofit.Builder().baseUrl(Constants.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -38,4 +36,15 @@ class NetworkModule {
         return retrofit.create(CryptoRateApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileHelper(): FileHelper {
+        return FileHelper(application)
+    }
 }

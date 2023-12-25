@@ -78,5 +78,10 @@ dependencies {
 
     // lottie animation
     implementation "com.airbnb.android:lottie:5.2.0"
+    
+    // countdown
+    implementation 'com.github.iwgang:countdownview:2.1.6'
 
+    // SharedPreferences
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 }
