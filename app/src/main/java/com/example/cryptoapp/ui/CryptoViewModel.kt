@@ -43,11 +43,17 @@ class CryptoViewModel @Inject constructor(
     fun fetchData() {
         _cryptoData.postValue(Resource.Loading())
         viewModelScope.launch {
-            _cryptoData.postValue(cryptoRepository.getCombinedCryptoData())
-            _refreshTime.postValue(getCurrentTime())
+            val result = cryptoRepository.getCombinedCryptoData()
+            _cryptoData.postValue(result)
+            if (result is Resource.Success) {
+                _refreshTime.postValue(getCurrentTime())
+                saveLastUpdatedTime(getCurrentTime())
+            } else {
+                val lastUpdate = sharedPreferences.getString("lastUpdate", "")!!
+                _refreshTime.postValue(lastUpdate)
+            }
         }
     }
-
 
     private fun scheduleDataRefresh() {
         refreshRunnable = object : Runnable {
@@ -63,6 +69,10 @@ class CryptoViewModel @Inject constructor(
         val currentTime = Calendar.getInstance().time
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         return timeFormat.format(currentTime)
+    }
+
+    private fun saveLastUpdatedTime(date: String) {
+        sharedPreferences.edit().putString("lastUpdate", date).apply()
     }
 
     private fun loadSharePreferences() {
