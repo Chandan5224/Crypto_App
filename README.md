@@ -6,6 +6,10 @@ Welcome to the Currency Exchange App! This Android application provides users wi
 
 check out the [App Link](https://drive.google.com/file/d/15b20LbL5UjMsegiWHK8-3foK5Y-cIDXg/view?usp=sharing).
 
+# Video Reference
+
+check out the [Video Link](https://drive.google.com/file/d/1vCP-Odxnk_2Cfp7mhmAkSjQ6GzklX1zX/view?usp=sharing).
+
 ## Features
 
 ### 1. Currency Information
