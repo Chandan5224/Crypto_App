@@ -17,7 +17,14 @@ Welcome to the Currency Exchange App! This Android application provides users wi
 ### 3. User Preferences and Interactions
    - **Share Preferences:** Save and manage user preferences using SharedPreferences for a personalized experience.
    - **Interactive UI:** Enjoy a user-friendly interface with smooth interactions and easy navigation.
+   - 
+## Technologies & Libraries Used
 
+- **MVVM Architecture:** Utilize the Model-View-ViewModel architecture for a clean and modular app structure.
+- **Jetpack Components:** Leverage Android Jetpack components for efficient app development.
+- **Dagger Hilt Injection:** Implement dependency injection for better code maintainability and testability.
+- **Glide:** Efficiently load and cache images with Glide, a powerful image loading library.
+- **Lottie Animation:** Enhance the user experience with Lottie for beautiful and engaging animations.
 # Screenshot
 ![Apps Screenshot](https://github.com/Chandan5224/Crypto_App/assets/86766647/b44c5ecd-d0db-4546-8030-46589049bd4d)
 ## Getting Started
