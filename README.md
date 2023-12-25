@@ -2,6 +2,10 @@
 
 Welcome to the Currency Exchange App! This Android application provides users with real-time information on various currencies, including their full names, icons, and exchange rates rounded off to 6 decimal places. With an intuitive user interface, you can easily navigate through different currencies and stay updated on the latest exchange rates.
 
+# Download App
+
+check out the [App Link](https://drive.google.com/file/d/15b20LbL5UjMsegiWHK8-3foK5Y-cIDXg/view?usp=sharing).
+
 ## Features
 
 ### 1. Currency Information
@@ -34,3 +38,5 @@ Follow these steps to get started with the Currency Exchange App:
 1. Clone the repository.
    ```bash
    git clone https://github.com/Chandan5224/Crypto_App
+
+
